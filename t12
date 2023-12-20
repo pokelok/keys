@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Chave Aleatória</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #chave {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <p id="chave"></p>
+    </div>
+
+    <script>
+        function gerarChave() {
+            // Tamanho da chave desejado
+            var tamanhoChave = 16;
+            
+            // Caracteres permitidos na chave
+            var caracteresPermitidos = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+            var chaveGerada = '';
+
+            for (var i = 0; i < tamanhoChave; i++) {
+                var indiceAleatorio = Math.floor(Math.random() * caracteresPermitidos.length);
+                chaveGerada += caracteresPermitidos.charAt(indiceAleatorio);
+            }
+
+            document.getElementById('chave').textContent = chaveGerada;
+
+            // Salvar a chave no armazenamento local
+            localStorage.setItem('chave', chaveGerada);
+            // Salvar o timestamp da última geração
+            localStorage.setItem('timestamp', Date.now());
+        }
+
+        // Função para verificar e gerar uma nova chave a cada 24 horas
+        function verificarEAtualizarChave() {
+            var ultimaGeracao = localStorage.getItem('timestamp');
+            if (!ultimaGeracao || (Date.now() - ultimaGeracao) >= 24 * 60 * 60 * 1000) {
+                // Se não houver uma última geração ou se passou mais de 24 horas, gere uma nova chave
+                gerarChave();
+            } else {
+                // Caso contrário, exiba a chave existente
+                document.getElementById('chave').textContent = localStorage.getItem('chave');
+            }
+        }
+
+        // Chamar a função ao carregar a página
+        verificarEAtualizarChave();
+    </script>
+</body>
+</html>
